@@ -1,17 +1,18 @@
 package com.example.boogle.viewModel
 
-import android.content.Context
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.boogle.data.BookDatabase
 import com.example.boogle.data.Books
-import com.example.boogle.network.BookAPI
+import com.example.boogle.network.BookRepository
 import com.example.boogle.utiles.ConvertData
 import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
+import retrofit2.Response
 
-class NetworkViewModel(applicationContext: Context) : ViewModel(
+class NetworkViewModel(
+    private val bookRepository: BookRepository
+) : ViewModel(
 ) {
 
     /**
@@ -20,7 +21,7 @@ class NetworkViewModel(applicationContext: Context) : ViewModel(
      * @TODO 3. make a deeplink for the books
      */
     init {
-        getBooks(applicationContext)
+        getBooks()
     }
    private val _bookList = mutableListOf<Books>().toMutableStateList()
 
@@ -29,21 +30,9 @@ class NetworkViewModel(applicationContext: Context) : ViewModel(
         return  _bookList.toList()
     }
 
-   private fun getBooks(applicationContext: Context) {
+   private fun getBooks() {
         viewModelScope.launch {
-            val  bookAPI = BookAPI.getInstance()
-            val responseBody: ResponseBody? = bookAPI?.getBook()
-            val convertData = ConvertData()
-            val data = responseBody?.string()
-            val bookDb = BookDatabase.getDatabase(applicationContext)
-
-            data?.let {
-                _bookList.addAll(convertData.convert(it))
-
-                bookDb?.bookDao()?.insertBook(_bookList[0])
-            }
-
-
+            bookRepository.getBooks()
         }
     }
 }
