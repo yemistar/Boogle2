@@ -5,14 +5,14 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
-const val APIKEY = "hide"
+const val APIKEY = ""
 const val baseUrl = "https://www.googleapis.com/"
 const val getBooks = "books/v1/volumes?q=flowers+inauthor:keyes&key=$APIKEY"
 interface BookAPI {
 
 
     @GET(getBooks)
-    suspend fun getBook(): ResponseBody
+    suspend fun getBook(): Response<ResponseBody>
 
 
     companion object{

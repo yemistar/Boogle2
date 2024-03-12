@@ -4,12 +4,16 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.boogle.data.Books
-import com.example.boogle.network.BookAPI
+import com.example.boogle.network.BookRepository
 import com.example.boogle.utiles.ConvertData
 import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
+import retrofit2.Response
 
-class NetworkViewModel : ViewModel() {
+class NetworkViewModel(
+    private val bookRepository: BookRepository
+) : ViewModel(
+) {
 
     /**
      *  @TODO 1. return a mutableState list of the books
@@ -20,22 +24,15 @@ class NetworkViewModel : ViewModel() {
         getBooks()
     }
    private val _bookList = mutableListOf<Books>().toMutableStateList()
+
+
     fun getBooksList(): List<Books>{
         return  _bookList.toList()
     }
 
-   private fun getBooks(){
+   private fun getBooks() {
         viewModelScope.launch {
-            val  bookAPI = BookAPI.getInstance()
-            val responseBody: ResponseBody? = bookAPI?.getBook()
-            val convertData = ConvertData()
-            val data = responseBody?.string()
-
-            data?.let {
-                _bookList.addAll(convertData.convert(it))
-            }
-
-
+            bookRepository.getBooks()
         }
     }
 }
