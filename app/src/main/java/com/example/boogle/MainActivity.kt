@@ -12,7 +12,7 @@ import com.example.boogle.data.BookDatabase
 import com.example.boogle.network.BookAPI
 import com.example.boogle.network.BookRepository
 import com.example.boogle.ui.theme.BoogleTheme
-import com.example.boogle.viewModel.NetworkViewModel
+import com.example.boogle.viewModel.BookViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
             val bookRepository = BookRepository(
                 bookApi,
                 bookDatabase?.bookDao())
-            val vm = NetworkViewModel(bookRepository)
+            val vm = BookViewModel(bookRepository)
             vm.getBooksList()
             BoogleTheme {
                 // A surface container using the 'background' color from the theme

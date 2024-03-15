@@ -28,4 +28,24 @@ class BookRepository(
         }
     }
 
+    fun getBookList(): List<Books>{
+        return _bookList.toList()
+    }
+
+   suspend fun saveBook(books: Books) {
+       bookDatabase?.insertBook(books)
+    }
+
+   suspend fun search(query: String) {
+       val responseBody: Response<ResponseBody>? =bookAPI?.queryBook(query, APIKEY)
+       val convertData = ConvertData()
+       val data = responseBody?.body()?.string()
+       if(responseBody?.isSuccessful == true){
+           _bookList.clear()
+           data.let {
+               _bookList.addAll(convertData.convert(it.orEmpty()))
+           }
+       }
+    }
+
 }
