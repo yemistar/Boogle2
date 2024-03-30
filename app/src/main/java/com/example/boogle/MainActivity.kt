@@ -3,15 +3,21 @@ package com.example.boogle
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.example.boogle.data.BookDatabase
+import com.example.boogle.data.Books
 import com.example.boogle.network.BookAPI
 import com.example.boogle.network.BookRepository
+import com.example.boogle.screens.Search
 import com.example.boogle.ui.theme.BoogleTheme
+import com.example.boogle.utiles.Events
 import com.example.boogle.viewModel.BookViewModel
 
 class MainActivity : ComponentActivity() {
@@ -31,7 +37,27 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                   Text(text = "Hello World")
+                    val temp = remember {
+                        mutableStateOf(emptyList<Books>())
+                    }
+                    LaunchedEffect(key1 =this ){
+                        vm.event.collect{
+                            when(it){
+                                is Events.SearchResult ->{
+                                    temp.value = it.result
+                                }
+                                else -> {}
+                            }
+                        }
+                    }
+                    Column {
+                        Search(
+                            searchQuery = {
+                                vm.onEvent(Events.Search(query = it))
+                            },
+                            temp
+                        )
+                    }
                 }
             }
         }

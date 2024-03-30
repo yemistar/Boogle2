@@ -36,16 +36,19 @@ class BookRepository(
        bookDatabase?.insertBook(books)
     }
 
-   suspend fun search(query: String) {
+   suspend fun search(query: String) : Boolean{
        val responseBody: Response<ResponseBody>? =bookAPI?.queryBook(query, APIKEY)
-       val convertData = ConvertData()
-       val data = responseBody?.body()?.string()
+
        if(responseBody?.isSuccessful == true){
+           val convertData = ConvertData()
+           val data = responseBody.body()?.string()
            _bookList.clear()
            data.let {
                _bookList.addAll(convertData.convert(it.orEmpty()))
            }
+           return true
        }
+       return false
     }
 
 }
