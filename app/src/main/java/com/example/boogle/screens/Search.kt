@@ -31,7 +31,7 @@ import com.example.boogle.data.Books
 @Composable
 fun Search(
     searchQuery: (text: String) -> Unit,
-    temp: MutableState<List<Books>>
+    searchResponse: MutableState<List<Books>>
 ){
 
     Column( modifier = Modifier.fillMaxSize()) {
@@ -42,9 +42,8 @@ fun Search(
             SearchBart(searchQuery)
         }
 
-
         LazyColumn{
-            itemsIndexed(temp.value){ _, item ->
+            itemsIndexed(searchResponse.value){ _, item ->
                 item.volumeInfo?.title?.let { Text(text = it) }
             }
         }

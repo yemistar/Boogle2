@@ -37,14 +37,14 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val temp = remember {
+                    val searchResponse = remember {
                         mutableStateOf(emptyList<Books>())
                     }
                     LaunchedEffect(key1 =this ){
                         vm.event.collect{
                             when(it){
                                 is Events.SearchResult ->{
-                                    temp.value = it.result
+                                    searchResponse.value = it.result
                                 }
                                 else -> {}
                             }
@@ -55,7 +55,7 @@ class MainActivity : ComponentActivity() {
                             searchQuery = {
                                 vm.onEvent(Events.Search(query = it))
                             },
-                            temp
+                            searchResponse
                         )
                     }
                 }
