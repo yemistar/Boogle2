@@ -25,13 +25,11 @@ interface BookAPI {
         private var bookAPI: BookAPI? = null
 
         fun getInstance(): BookAPI? {
-
             if (bookAPI == null){
                bookAPI = Retrofit.Builder()
                     .baseUrl(baseUrl)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build().create(BookAPI::class.java)
-
             }
             return bookAPI
         }

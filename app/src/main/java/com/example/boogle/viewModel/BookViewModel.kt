@@ -1,6 +1,5 @@
 package com.example.boogle.viewModel
 
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,43 +14,26 @@ class BookViewModel(
     private val bookRepository: BookRepository
 ) : ViewModel(
 ) {
-
-    /**
-     *  @TODO 1. return a mutableState list of the books
-     * @TODO 2. make a room data base for the books
-     * @TODO 3. make a deeplink for the books
-     */
-
     private val _events = MutableSharedFlow<Events>()
     val event = _events.asSharedFlow()
    private val _bookList = mutableListOf<Books>().toMutableStateList()
 
-    fun onEvent(events: Events){
+     fun onEvent(events: Events){
         when(events){
 
             is Events.FirstTime ->{
                 sentEvent(Events.Loading)
-
             }
 
             is Events.GetBooks -> {
-
             }
 
             is Events.SaveBook -> {
                saveBook(events.books)
-                sentEvent(
-                    Events.Status(
-                    status = "Book ${events.books.volumeInfo?.title} saved")
-                )
-
             }
 
             is Events.Search -> {
-                searchForBook(events.query)
-                sentEvent(
-                    Events.SearchResult(result = bookRepository.getBookList())
-                )
+               searchForBook(events.query)
             }
 
             else -> {}
@@ -62,13 +44,27 @@ class BookViewModel(
         viewModelScope.launch{
             bookRepository.saveBook(books)
         }
+
     }
 
     private fun searchForBook(query:String){
+        var status = false
         viewModelScope.launch {
-            bookRepository.search(query)
+           val searchResult =launch {
+               status= bookRepository.search(query)
+            }
+            searchResult.join()
+            if(status){
+                sentEvent(
+                    Events.SearchResult(
+                        result = bookRepository.getBookList())
+                )
+            }else {
+                // do something
+            }
         }
     }
+
     fun getBooksList(): List<Books>{
         return  _bookList.toList()
     }

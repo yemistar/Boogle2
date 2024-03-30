@@ -11,7 +11,7 @@ sealed class Events {
     data class Status(val status: String): Events()
 
 
-    data class SearchResult(val result: List<Books>): Events()
+    data class SearchResult(var result: List<Books>): Events()
 
     data class SaveBook(val books: Books): Events()
 
