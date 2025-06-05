@@ -13,7 +13,7 @@ class ConvertData {
         val gson = Gson()
         val size:Int = jsonObject.getJSONArray("items").length()
 
-        for (value: Int in 0..<size){
+        for (value: Int in 0 until size){
             val item = jsonObject.getJSONArray("items").get(value)
             val book = gson.fromJson(item.toString(),Books::class.java)
             list.add(book)
