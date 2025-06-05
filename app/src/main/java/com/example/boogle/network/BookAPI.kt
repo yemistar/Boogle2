@@ -5,7 +5,6 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 const val APIKEY = ""
@@ -18,7 +17,7 @@ interface BookAPI {
     suspend fun getBook(): Response<ResponseBody>
 
     @GET("books/v1/volumes")
-    suspend fun queryBook(@Query("q") query: String, @Query("keyes&key") key: String): Response<ResponseBody>
+    suspend fun queryBook(@Query("q") query: String, @Query("key") key: String): Response<ResponseBody>
 
 
     companion object{
