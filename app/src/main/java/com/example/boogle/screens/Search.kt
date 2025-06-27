@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.Search
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Switch
 
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
@@ -31,7 +32,9 @@ import com.example.boogle.data.Books
 @Composable
 fun Search(
     searchQuery: (text: String) -> Unit,
-    searchResponse: MutableState<List<Books>>
+    searchResponse: MutableState<List<Books>>,
+    darkTheme: Boolean,
+    onToggleTheme: () -> Unit
 ){
 
     Column( modifier = Modifier.fillMaxSize()) {
@@ -40,6 +43,7 @@ fun Search(
             modifier = Modifier.padding(10.dp)
         ) {
             SearchBart(searchQuery)
+            Switch(checked = darkTheme, onCheckedChange = { onToggleTheme() })
         }
 
         LazyColumn{
