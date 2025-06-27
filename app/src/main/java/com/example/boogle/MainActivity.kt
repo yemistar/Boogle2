@@ -10,6 +10,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.example.boogle.data.BookDatabase
 import com.example.boogle.data.Books
@@ -31,7 +33,8 @@ class MainActivity : ComponentActivity() {
                 bookDatabase?.bookDao())
             val vm = BookViewModel(bookRepository)
             vm.getBooksList()
-            BoogleTheme {
+            var darkTheme by remember { mutableStateOf(false) }
+            BoogleTheme(darkTheme = darkTheme) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -55,7 +58,9 @@ class MainActivity : ComponentActivity() {
                             searchQuery = {
                                 vm.onEvent(Events.Search(query = it))
                             },
-                            searchResponse
+                            searchResponse = searchResponse,
+                            darkTheme = darkTheme,
+                            onToggleTheme = { darkTheme = !darkTheme }
                         )
                     }
                 }
